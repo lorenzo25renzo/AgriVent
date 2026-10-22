@@ -1,7 +1,3 @@
-
-import sqlite3
-from pathlib import Path
-
 from flask import (
     Flask,
     render_template,
@@ -13,19 +9,11 @@ from flask import (
 )
 
 from werkzeug.security import generate_password_hash, check_password_hash
+from database import get_connection
 
 
 app = Flask(__name__)
 app.secret_key = "agrivent_secret_key_2026"
-
-DATABASE_NAME = Path(__file__).resolve().parent / "agrivent.db"
-
-
-def get_connection():
-    connection = sqlite3.connect(DATABASE_NAME)
-    connection.row_factory = sqlite3.Row
-    connection.execute("PRAGMA foreign_keys = ON")
-    return connection
 
 
 def create_admin_account():
