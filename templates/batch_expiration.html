@@ -1,0 +1,147 @@
+{% extends "base.html" %}
+
+{% block title %}Batch Expiration{% endblock %}
+
+{% block page_title %}Batch Expiration{% endblock %}
+
+{% block page_subtitle %}
+Monitor product batches and their expiration dates.
+{% endblock %}
+
+{% block content %}
+
+<div class="row g-3 mb-4">
+
+    <div class="col-md-4">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-body">
+                <p class="text-muted mb-1">Total Batches</p>
+                <h3 class="mb-0">{{ batches|length }}</h3>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-body">
+                <p class="text-muted mb-1">Expired Batches</p>
+                <h3 class="text-danger mb-0">
+                    {{ batches|selectattr('expiration_status', 'equalto', 'Expired')|list|length }}
+                </h3>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-body">
+                <p class="text-muted mb-1">Expiring Soon</p>
+                <h3 class="text-warning mb-0">
+                    {{ batches|selectattr('expiration_status', 'equalto', 'Expiring Soon')|list|length }}
+                </h3>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<div class="card border-0 shadow-sm">
+
+    <div class="card-body">
+
+        <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
+            <div>
+                <h5 class="mb-1">Batch Expiration Records</h5>
+                <p class="text-muted small mb-0">
+                    Check which batches are expired or approaching expiration.
+                </p>
+            </div>
+        </div>
+
+        {% if batches %}
+
+        <div class="table-responsive">
+
+            <table class="table table-hover align-middle">
+
+                <thead class="table-light">
+                    <tr>
+                        <th>Product</th>
+                        <th>SKU</th>
+                        <th>Batch Number</th>
+                        <th>Quantity</th>
+                        <th>Expiration Date</th>
+                        <th>Date Received</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for batch in batches %}
+                    <tr>
+
+                        <td>
+                            <strong>{{ batch['product_name'] }}</strong>
+                            <div class="small text-muted">
+                                {{ batch['category'] or 'Uncategorized' }}
+                            </div>
+                        </td>
+
+                        <td>{{ batch['sku'] }}</td>
+
+                        <td>{{ batch['batch_number'] }}</td>
+
+                        <td>
+                            {{ batch['quantity'] }}
+                            {{ batch['unit'] }}
+                        </td>
+
+                        <td>
+                            {% if batch['expiration_date'] %}
+                                {{ batch['expiration_date'] }}
+                            {% else %}
+                                <span class="text-muted">Not set</span>
+                            {% endif %}
+                        </td>
+
+                        <td>{{ batch['received_at'] }}</td>
+
+                        <td>
+                            {% if batch['expiration_status'] == 'Expired' %}
+                                <span class="badge bg-danger">Expired</span>
+                            {% elif batch['expiration_status'] == 'Expiring Soon' %}
+                                <span class="badge bg-warning text-dark">Expiring Soon</span>
+                            {% elif batch['expiration_status'] == 'Good' %}
+                                <span class="badge bg-success">Good</span>
+                            {% else %}
+                                <span class="badge bg-secondary">No Expiration Date</span>
+                            {% endif %}
+                        </td>
+
+                    </tr>
+                    {% endfor %}
+                </tbody>
+
+            </table>
+
+        </div>
+
+        {% else %}
+
+        <div class="text-center py-5">
+            <h5>No Batch Records Yet</h5>
+            <p class="text-muted mb-3">
+                Product batches will appear here after you receive stock.
+            </p>
+            <a href="{{ url_for('stock_receiving') }}" class="btn btn-success">
+                Go to Stock Receiving
+            </a>
+        </div>
+
+        {% endif %}
+
+    </div>
+
+</div>
+
+{% endblock %}

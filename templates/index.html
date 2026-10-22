@@ -1,0 +1,79 @@
+
+{% extends "base.html" %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block page_title %}Dashboard{% endblock %}
+
+{% block page_subtitle %}Welcome to AgriVent{% endblock %}
+
+{% block content %}
+
+<h4>Dashboard Overview</h4>
+
+<p class="text-muted">
+    Monitor your sales and inventory in one place.
+</p>
+
+<div class="dashboard-cards">
+
+    <div class="summary-card">
+        <div class="card-icon products-icon">P</div>
+
+        <div>
+            <p>Total Products</p>
+            <h3>{{ total_products }}</h3>
+            <small>Products registered</small>
+        </div>
+    </div>
+
+    <div class="summary-card">
+        <div class="card-icon stock-icon">!</div>
+
+        <div>
+            <p>Low Stock Items</p>
+            <h3>{{ low_stock_items }}</h3>
+            <small>Items needing restock</small>
+        </div>
+    </div>
+
+    <div class="summary-card">
+        <div class="card-icon sales-icon">S</div>
+
+        <div>
+            <p>Total Sales</p>
+            <h3>₱{{ "{:,.2f}".format(total_sales) }}</h3>
+            <small>Total recorded sales</small>
+        </div>
+    </div>
+
+    <div class="summary-card">
+        <div class="card-icon inventory-icon">I</div>
+
+        <div>
+            <p>Inventory Value</p>
+            <h3>₱{{ "{:,.2f}".format(inventory_value) }}</h3>
+            <small>Estimated stock value</small>
+        </div>
+    </div>
+
+</div>
+
+<div class="dashboard-welcome">
+
+    <h5>Welcome to AgriVent!</h5>
+
+    <p>
+        Manage your products, monitor inventory levels,
+        track sales, and review business performance
+        in one place.
+    </p>
+
+    <p class="mt-2">
+        Your dashboard statistics update when records
+        are added to the database.
+    </p>
+
+</div>
+
+{% endblock %}

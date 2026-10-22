@@ -1,0 +1,107 @@
+{% extends "base.html" %}
+
+{% block title %}Add Supplier{% endblock %}
+
+{% block page_title %}Add Supplier{% endblock %}
+
+{% block page_subtitle %}
+Register a new supplier in AgriVent.
+{% endblock %}
+
+{% block content %}
+
+<div class="card border-0 shadow-sm">
+    <div class="card-body p-4">
+
+        <h5 class="mb-1">Supplier Information</h5>
+        <p class="text-muted mb-4">
+            Enter the supplier's details below.
+        </p>
+
+        <form action="{{ url_for('add_supplier') }}" method="POST">
+
+            <div class="row g-3">
+
+                <div class="col-md-6">
+                    <label for="name" class="form-label">
+                        Supplier Name <span class="text-danger">*</span>
+                    </label>
+                    <input
+                        type="text"
+                        class="form-control"
+                        id="name"
+                        name="name"
+                        placeholder="Enter supplier name"
+                        required
+                    >
+                </div>
+
+                <div class="col-md-6">
+                    <label for="contact_person" class="form-label">
+                        Contact Person
+                    </label>
+                    <input
+                        type="text"
+                        class="form-control"
+                        id="contact_person"
+                        name="contact_person"
+                        placeholder="Enter contact person's name"
+                    >
+                </div>
+
+                <div class="col-md-6">
+                    <label for="phone" class="form-label">Phone Number</label>
+                    <input
+                        type="tel"
+                        class="form-control"
+                        id="phone"
+                        name="phone"
+                        placeholder="Enter phone number"
+                    >
+                </div>
+
+                <div class="col-md-6">
+                    <label for="email" class="form-label">Email Address</label>
+                    <input
+                        type="email"
+                        class="form-control"
+                        id="email"
+                        name="email"
+                        placeholder="Enter email address"
+                    >
+                </div>
+
+                <div class="col-12">
+                    <label for="address" class="form-label">Address</label>
+                    <textarea
+                        class="form-control"
+                        id="address"
+                        name="address"
+                        rows="3"
+                        placeholder="Enter supplier address"
+                    ></textarea>
+                </div>
+
+            </div>
+
+            <hr class="my-4">
+
+            <div class="d-flex gap-2">
+                <button type="submit" class="btn btn-success">
+                    Save Supplier
+                </button>
+
+                <a
+                    href="{{ url_for('suppliers') }}"
+                    class="btn btn-outline-secondary"
+                >
+                    Cancel
+                </a>
+            </div>
+
+        </form>
+
+    </div>
+</div>
+
+{% endblock %}

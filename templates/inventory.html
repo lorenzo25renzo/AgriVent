@@ -1,0 +1,124 @@
+
+{% extends "base.html" %}
+
+{% block title %}Inventory{% endblock %}
+{% block page_title %}Inventory Management{% endblock %}
+{% block page_subtitle %}Monitor stock quantities and inventory levels.{% endblock %}
+
+{% block content %}
+
+<div class="mb-4">
+    <h4>Inventory Overview</h4>
+    <p class="text-muted">
+        View the current stock quantities of your registered products.
+    </p>
+</div>
+
+<div class="row g-3 mb-4">
+
+    <div class="col-md-4">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-body">
+                <p class="text-muted mb-2">Registered Products</p>
+                <h3 class="mb-0">{{ inventory_items|length }}</h3>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-body">
+                <p class="text-muted mb-2">Total Stock Units</p>
+                <h3 class="mb-0">
+                    {{ inventory_items|sum(attribute='stock_quantity') }}
+                </h3>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-body">
+                <p class="text-muted mb-2">Low Stock Products</p>
+                <h3 class="mb-0">
+                    {% set low_stock_count = namespace(value=0) %}
+                    {% for item in inventory_items %}
+                        {% if item['stock_quantity'] <= item['reorder_level'] %}
+                            {% set low_stock_count.value = low_stock_count.value + 1 %}
+                        {% endif %}
+                    {% endfor %}
+                    {{ low_stock_count.value }}
+                </h3>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<div class="card border-0 shadow-sm">
+    <div class="card-body">
+
+        <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
+            <div>
+                <h5 class="mb-1">Stock List</h5>
+                <p class="text-muted mb-0">
+                    Current stock for each registered product.
+                </p>
+            </div>
+
+            <a href="{{ url_for('products') }}" class="btn btn-outline-success">
+                View Products
+            </a>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table table-hover align-middle">
+
+                <thead class="table-light">
+                    <tr>
+                        <th>SKU</th>
+                        <th>Product Name</th>
+                        <th>Category</th>
+                        <th>Unit</th>
+                        <th>Stock Quantity</th>
+                        <th>Reorder Level</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for item in inventory_items %}
+                    <tr>
+                        <td>{{ item['sku'] }}</td>
+                        <td>{{ item['name'] }}</td>
+                        <td>{{ item['category'] or '-' }}</td>
+                        <td>{{ item['unit'] or '-' }}</td>
+                        <td>{{ item['stock_quantity'] }}</td>
+                        <td>{{ item['reorder_level'] }}</td>
+                        <td>
+                            {% if item['stock_quantity'] == 0 %}
+                                <span class="badge text-bg-danger">Out of Stock</span>
+                            {% elif item['stock_quantity'] <= item['reorder_level'] %}
+                                <span class="badge text-bg-warning">Low Stock</span>
+                            {% else %}
+                                <span class="badge text-bg-success">In Stock</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+
+                    {% else %}
+                    <tr>
+                        <td colspan="7" class="text-center text-muted py-4">
+                            No products registered yet. Add a product to start managing inventory.
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+
+            </table>
+        </div>
+
+    </div>
+</div>
+
+{% endblock %}
