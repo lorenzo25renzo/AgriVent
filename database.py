@@ -1,8 +1,7 @@
-
 import sqlite3
+from pathlib import Path
 
-
-DATABASE_NAME = "agrivent.db"
+DATABASE_NAME = Path(__file__).resolve().parent / "agrivent.db"
 
 
 def get_connection():
